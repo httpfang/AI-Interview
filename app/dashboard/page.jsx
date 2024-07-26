@@ -1,9 +1,13 @@
+import { UserButton } from '@clerk/nextjs'
 import React from 'react'
+import Header from './_components/Header'
 
 function Dashboard() {
   return (
     <div>
-      page
+      <Header />
+      page hi
+      <UserButton />
     </div>
   )
 }
