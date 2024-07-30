@@ -28,7 +28,7 @@ function AddNewInterview() {
             <DialogDescription>
               <div>
                 <h2>Add details about your job position/role, job description and years of experience</h2>
-                <div className='mt-4 my-2'>
+                <div className='mt-4 my-2 text-xl'>
                     <lebel >job role/job position</lebel>
                     <Input className="mt-3" placeholder="Eg: frontend developer" />
                 </div>
