@@ -61,7 +61,7 @@ function AddNewInterview() {
             CreatedBy: user?.primaryEmailAddress?.emailAddress,
             createdAt: moment().format("dd-mm-yyyy"),
           })
-          .returning({ mockId: MockInterview.mockIdockId });
+          .returning({ MockId: MockInterview.MockId });
         console.log("inserted id:", response);
       }
       else {
