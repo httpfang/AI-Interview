@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { chatSession } from '@/utils/GeminiAiModal';
   
 
 function AddNewInterview() {
@@ -18,9 +19,13 @@ function AddNewInterview() {
     const [jobPosition, setJobPosition] = useState()
     const [jobDesc, setJobDesc] = useState()
     const [jobExperience, setJobExpirience] = useState()
-    const onSubmit = (e) => {
+    const onSubmit = async(e) => {
       e.preventDefault()
       console.log("onSubmit");
+    
+      const InputPrompt = "Job Position: "+jobPosition+", Job Description: "+jobDesc+", Years of Experience: "+jobExperience+", Depends on this information please give me "+process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT +" Interview question with Answered in Json Format, Give Question and Answered as field in JSON"
+      const result = await chatSession.sendMessage(InputPrompt);
+      console.log(result.response.text())
     }
   return (
     <div>
