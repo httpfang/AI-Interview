@@ -4,15 +4,20 @@ import { db } from '@/utils/db';
 import { MockInterview } from '@/utils/schema';
 import { eq } from 'drizzle-orm';
 import { Lightbulb, WebcamIcon } from 'lucide-react';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
 
 function Interview({ params }) {
   const [interviewData, setInterviewData] = useState({});
   const [webCamEnabled, setWebcamEnabled] = useState(false);
 
+  useEffect(() => {
+    console.log(params.interviewId);
+    GetInterviewDetails();
+  }, [params.interviewId]);
+
   // used to get interview details by mockid/interview id
-  const GetInterviewDetails = useCallback(async () => {
+  const GetInterviewDetails = async () => {
     try {
       const result = await db.select().from(MockInterview).where(eq(MockInterview.MockId, params.interviewId));
       if (result.length > 0) {
@@ -24,12 +29,7 @@ function Interview({ params }) {
     } catch (error) {
       console.error('Error fetching interview details:', error);
     }
-  }, [params.interviewId]);
-
-  useEffect(() => {
-    console.log(params.interviewId);
-    GetInterviewDetails();
-  }, [params.interviewId, GetInterviewDetails]);
+  };
 
   return (
     <div className="my-10">
@@ -84,7 +84,7 @@ function Interview({ params }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-end items-end">
+      <div className="flex justify-enditems-end ">
         <Button>Start Interview</Button>
       </div>
     </div>
