@@ -4,6 +4,7 @@ import { db } from '@/utils/db';
 import { MockInterview } from '@/utils/schema';
 import { eq } from 'drizzle-orm';
 import { Lightbulb, WebcamIcon } from 'lucide-react';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
 
@@ -16,7 +17,8 @@ function Interview({ params }) {
     GetInterviewDetails();
   }, [params.interviewId]);
 
-  // used to get interview details by mockid/interview id
+  
+// used to get interview details by mockid/interview id
   const GetInterviewDetails = async () => {
     try {
       const result = await db.select().from(MockInterview).where(eq(MockInterview.MockId, params.interviewId));
@@ -30,7 +32,6 @@ function Interview({ params }) {
       console.error('Error fetching interview details:', error);
     }
   };
-
   return (
     <div className="my-10">
       <h2 className="font-bold text-2xl">Let's get started</h2>
@@ -85,7 +86,10 @@ function Interview({ params }) {
         </div>
       </div>
       <div className="flex justify-enditems-end ">
+        <Link href={'/dashboard/interview/'+params.interviewId+'/start'}>
         <Button>Start Interview</Button>
+        </Link>
+        
       </div>
     </div>
   );

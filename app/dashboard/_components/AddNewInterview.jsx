@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import React, { useState } from 'react';
 import {
     Dialog,
@@ -46,40 +47,54 @@ function AddNewInterview() {
             process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT +
             " Interview question with Answered in Json Format, Give Question and Answered as field in JSON";
 
-        const result = await chatSession.sendMessage(InputPrompt);
-        const MockJsonResponse = result.response
-            .text()
-            .replace("```json", "")
-            .replace("```", "");
+        try {
+            const result = await chatSession.sendMessage(InputPrompt);
+            const responseText = await result.response.text();
 
-        console.log(JSON.parse(MockJsonResponse));
-        setJasonResponse(MockJsonResponse);
+            // Removing any backticks or unnecessary characters
+            const cleanedResponse = responseText.replace(/```json|```/g, "").trim();
 
-        if (MockJsonResponse) {
-            const response = await db
-                .insert(MockInterview)
-                .values({
-                    MockId: uuidv4(),
-                    jasonMockResp: MockJsonResponse,
-                    jobPosition: jobPosition,
-                    jobDesc: jobDesc,
-                    jobExperience: jobExperience,
-                    CreatedBy: user?.primaryEmailAddress?.emailAddress,
-                    createdAt: moment().format("DD-MM-YYYY"),
-                })
-                .returning({ MockId: MockInterview.MockId });
-
-            console.log("inserted id:", response);
-
-            if (response) {
-                setOpenDialog(false);
-                router.push(`/dashboard/interview/${response[0]?.MockId}`);
+            // Attempting to parse the cleaned response
+            let parsedResponse;
+            try {
+                parsedResponse = JSON.parse(cleanedResponse);
+            } catch (jsonParseError) {
+                console.error("Failed to parse JSON:", jsonParseError);
+                console.error("Received response:", cleanedResponse);
+                throw new Error("Invalid JSON response from chat session");
             }
-        } else {
-            console.log('error in response');
-        }
 
-        setLoading(false);
+            console.log(parsedResponse);
+            setJasonResponse(parsedResponse);
+
+            if (parsedResponse) {
+                const response = await db
+                    .insert(MockInterview)
+                    .values({
+                        MockId: uuidv4(),
+                        jasonMockResp: cleanedResponse,
+                        jobPosition: jobPosition,
+                        jobDesc: jobDesc,
+                        jobExperience: jobExperience,
+                        CreatedBy: user?.primaryEmailAddress?.emailAddress,
+                        createdAt: moment().format("DD-MM-YYYY"),
+                    })
+                    .returning({ MockId: MockInterview.MockId });
+
+                console.log("inserted id:", response);
+
+                if (response) {
+                    setOpenDialog(false);
+                    router.push(`/dashboard/interview/${response[0]?.MockId}`);
+                }
+            } else {
+                console.log('error in response');
+            }
+        } catch (error) {
+            console.error("Error in onSubmit:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
