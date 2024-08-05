@@ -1,7 +1,18 @@
-import { UserButton } from '@clerk/nextjs'
-import React from 'react'
-import AddNewInterview from './_components/AddNewInterview'
+'use client'
+import React, { useEffect } from 'react';
+import { UserButton } from '@clerk/nextjs';
+import AddNewInterview from './_components/AddNewInterview';
+
 function Dashboard() {
+  // Assuming GetInterviewDetails is a function or a variable you need to use within useEffect
+  const GetInterviewDetails = () => {
+    // Function implementation here
+  };
+
+  useEffect(() => {
+    GetInterviewDetails();
+  }, [GetInterviewDetails]); // Add GetInterviewDetails to the dependency array
+
   return (
     <div className='p-10'>
       <h2 className='font-bold text-2xl'>Dashboard</h2>
@@ -10,7 +21,7 @@ function Dashboard() {
         <AddNewInterview />
       </div>
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;
