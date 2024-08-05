@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import { Button } from '@/components/ui/button';
 import { db } from '@/utils/db';
 import { MockInterview } from '@/utils/schema';
@@ -8,30 +8,30 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
 
-// Function to get interview details by mockid/interview id
-const GetInterviewDetails = async (interviewId, setInterviewData) => {
-  try {
-    const result = await db.select().from(MockInterview).where(eq(MockInterview.MockId, interviewId));
-    if (result.length > 0) {
-      setInterviewData(result[0]);
-    } else {
-      console.warn('No interview data found for the given interviewId');
-    }
-    console.log('Database query result:', result);
-  } catch (error) {
-    console.error('Error fetching interview details:', error);
-  }
-};
-
 function Interview({ params }) {
   const [interviewData, setInterviewData] = useState({});
   const [webCamEnabled, setWebcamEnabled] = useState(false);
 
   useEffect(() => {
     console.log(params.interviewId);
-    GetInterviewDetails(params.interviewId, setInterviewData);
+    GetInterviewDetails();
   }, [params.interviewId]);
 
+  
+// used to get interview details by mockid/interview id
+  const GetInterviewDetails = async () => {
+    try {
+      const result = await db.select().from(MockInterview).where(eq(MockInterview.MockId, params.interviewId));
+      if (result.length > 0) {
+        setInterviewData(result[0]);
+      } else {
+        console.warn('No interview data found for the given interviewId');
+      }
+      console.log('Database query result:', result);
+    } catch (error) {
+      console.error('Error fetching interview details:', error);
+    }
+  };
   return (
     <div className="my-10">
       <h2 className="font-bold text-2xl">Let's get started</h2>
@@ -59,7 +59,7 @@ function Interview({ params }) {
             </>
           )}
         </div>
-        <div className="flex flex-col my-5 gap-5">
+        <div className="flex flex-col my-5 gap-5 ">
           <div className="p-5 rounded border">
             <h2 className="text-lg">
               <strong>Job Role/Job Position: </strong>
@@ -85,10 +85,11 @@ function Interview({ params }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-end items-end">
-        <Link href={`/dashboard/interview/${params.interviewId}/start`}>
-          <Button>Start Interview</Button>
+      <div className="flex justify-enditems-end ">
+        <Link href={'/dashboard/interview/'+params.interviewId+'/start'}>
+        <Button>Start Interview</Button>
         </Link>
+        
       </div>
     </div>
   );
